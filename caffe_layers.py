@@ -37,6 +37,13 @@ def set_param(fid, param):
     fid.write("  }\n")
 
 
+def set_data_deploy(fid, layer_name, batch_size, channels, height, width):
+    fid.write("input: \"%s\"\n" % (layer_name))
+    fid.write("input_dim: %d\n" % (batch_size))
+    fid.write("input_dim: %d\n" % (channels))
+    fid.write("input_dim: %d\n" % (height))
+    fid.write("input_dim: %d\n" % (width))
+
 def set_data_lmdb(fid, layer_name, top_name, source, batch_size, transform_param, include_phase):
     create_layer_head(fid, layer_name, 'Data', [], top_name)
     fid.write("  data_param {\n")
@@ -117,7 +124,7 @@ def set_batchnorm(fid, layer_name, bottom_name, top_name):
         set_param(fid, ['lr_mult: 0', 'decay_mult: 0'])
     fid.write("}\n")
 
-def set_scale(fid, layer_name, bottom_name, top_name, params, bias_term, filler, bias_filler):
+def set_scale(fid, layer_name, bottom_name, top_name, params, bias_term = None, filler = None, bias_filler = None):
     create_layer_head(fid, layer_name, 'Scale', bottom_name, top_name)
     for param in params:
         set_param(fid, param)
