@@ -7,6 +7,9 @@ def main(argc, argv):
     
     net_name = 'test.prototxt'
     with open(net_name, 'w') as f:
+        set_data_lmdb(f, 'data', ['data', 'label'], '/media/mik/1682C04C82C031D3/FR_db/gml_faces3M/caffe/20_54_train_lmdb', 256, ['crop_size: 50', 'mirror: 1', 'jittering: 1', 'jittering_angle: 5', 'jittering_noise_gaussian_sigma: 2'], 'TRAIN')
+        set_data_lmdb(f, 'data', ['data', 'label'], '/media/mik/1682C04C82C031D3/FR_db/gml_faces3M/caffe/20_54_test_lmdb', 128, ['crop_size: 50'], 'TEST')
+        set_data_hdf5(f, 'input_clip', 'clip', '/home/mik/lstm_fr/hd5_clip.txt', 128, 'false', 'TRAIN')
         set_convolution(f, 'conv1_1', 'data', 'conv1_1', [['name: "conv1_1"' , 'lr_mult: 1', 'decay_mult: 0']], 64, 1, 3, 2, None, ['gaussian', 'std: 0.03'], 'constant')
         set_relu(f, 'relu1_1', 'conv1_1')
         set_pooling(f, 'pool1', 'conv1_1', 'pool1', 'MAX', 2, 2)
@@ -18,3 +21,4 @@ def main(argc, argv):
 
 if __name__ == "__main__":
     main(len(sys.argv), sys.argv)
+
