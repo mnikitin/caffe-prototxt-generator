@@ -136,4 +136,15 @@ def set_eltwise(fid, layer_name, bottom_name, top_name, operation):
     fid.write("  }\n")
     fid.write("}\n")
 
+def set_loss_softmax(fid, layer_name, bottom_name, top_name, loss_weight = None):
+    create_layer_head(fid, layer_name, 'SoftmaxWithLoss', bottom_name, top_name)
+    if loss_weight is not None:
+        fid.write("  loss_weight: %f\n" % (loss_weight))
+    fid.write("}\n")
+
+def set_loss_euclidean(fid, layer_name, bottom_name, top_name, loss_weight = None):
+    create_layer_head(fid, layer_name, 'EuclideanLoss', bottom_name, top_name)
+    if loss_weight is not None:
+        fid.write("  loss_weight: %f\n" % (loss_weight))
+    fid.write("}\n")
 

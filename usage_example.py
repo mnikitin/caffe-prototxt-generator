@@ -18,6 +18,9 @@ def main(argc, argv):
         set_batchnorm(f, 'bn', 'ip1', 'ip1')
         set_scale(f, 'scale', 'ip1', 'ip1', [], 'true', None, ['constant', 'value: 0'])
         set_eltwise(f, 'eltwise_sum', ['ip1', 'ip1'], 'ip1_sum', 'SUM')
+        set_loss_softmax(f, 'softmax_loss', ['ip1', 'label'], 'softmax_loss')
+        set_loss_euclidean(f, 'euclidean_loss', ['ip1', 'ip1'], 'euclidean_loss', 0.95)
+
 
 if __name__ == "__main__":
     main(len(sys.argv), sys.argv)
