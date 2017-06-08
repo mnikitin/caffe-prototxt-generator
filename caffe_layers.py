@@ -76,3 +76,21 @@ def set_dropout(fid, layer_name, bottom_name, top_name, dropout_ratio):
     fid.write("  }\n")
     fid.write("}\n")
 
+def set_batchnorm(fid, layer_name, bottom_name, top_name):
+    create_layer_head(fid, layer_name, 'BatchNorm', bottom_name, top_name)
+    for _ in range(3):
+        set_param(fid, ['lr_mult: 0', 'decay_mult: 0'])
+    fid.write("}\n")
+
+def set_scale(fid, layer_name, bottom_name, top_name, params, bias_term, filler, bias_filler):
+    create_layer_head(fid, layer_name, 'Scale', bottom_name, top_name)
+    for param in params:
+        set_param(fid, param)
+    if bias_term is not None or filler is not None or bias_filler is not None:
+        fid.write("  scale_param {\n")
+        fid.write("    bias_term: %s\n" % (bias_term))
+        set_filler(fid, 'filler', filler)
+        set_filler(fid, 'bias_filler', bias_filler)
+        fid.write("  }\n")
+    fid.write("}\n")
+
