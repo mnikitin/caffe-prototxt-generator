@@ -6,8 +6,10 @@ def create_layer_head(fid, layer_name, layer_type, bottom_name, top_name):
     fid.write("layer {\n")
     fid.write("  name: \"%s\"\n" % (layer_name))
     fid.write("  type: \"%s\"\n" % (layer_type))
-    fid.write("  bottom: \"%s\"\n" % (bottom_name))
-    fid.write("  top: \"%s\"\n" % (top_name))
+    for bot in bottom_name:
+        fid.write("  bottom: \"%s\"\n" % (bot))
+    for top in top_name:
+        fid.write("  top: \"%s\"\n" % (top))
 
 def set_filler(fid, filler_name, filler):
     if filler:
@@ -28,7 +30,7 @@ def set_param(fid, param):
 
 
 def set_convolution(fid, layer_name, bottom_name, top_name, params, num_output, pad, kernel_size, stride, bias_term = None, weight_filler = None, bias_filler = None):
-    create_layer_head(fid, layer_name, 'Convolution', bottom_name, top_name)
+    create_layer_head(fid, layer_name, 'Convolution', [bottom_name], [top_name])
     for param in params:
         set_param(fid, param)
     fid.write("  convolution_param {\n")
@@ -44,7 +46,7 @@ def set_convolution(fid, layer_name, bottom_name, top_name, params, num_output, 
     fid.write("}\n")
 
 def set_innerproduct(fid, layer_name, bottom_name, top_name, params, num_output, bias_term = None, weight_filler = None, bias_filler = None):
-    create_layer_head(fid, layer_name, 'InnerProduct', bottom_name, top_name)
+    create_layer_head(fid, layer_name, 'InnerProduct', [bottom_name], [top_name])
     for param in params:
         set_param(fid, param)
     fid.write("  inner_product_param {\n")
@@ -57,11 +59,11 @@ def set_innerproduct(fid, layer_name, bottom_name, top_name, params, num_output,
     fid.write("}\n")
 
 def set_relu(fid, layer_name, bottom_name, top_name = None):
-    create_layer_head(fid, layer_name, 'ReLU', bottom_name, top_name)
+    create_layer_head(fid, layer_name, 'ReLU', [bottom_name], [top_name])
     fid.write("}\n")
 
 def set_pooling(fid, layer_name, bottom_name, top_name, pool_type, kernel_size, stride):
-    create_layer_head(fid, layer_name, 'Pooling', bottom_name, top_name)
+    create_layer_head(fid, layer_name, 'Pooling', [bottom_name], [top_name])
     fid.write("  pooling_param {\n")
     fid.write("    pool: %s\n" % (pool_type))
     fid.write("    kernel_size: %d\n" % (kernel_size))
@@ -70,20 +72,20 @@ def set_pooling(fid, layer_name, bottom_name, top_name, pool_type, kernel_size, 
     fid.write("}\n")
 
 def set_dropout(fid, layer_name, bottom_name, top_name, dropout_ratio):
-    create_layer_head(fid, layer_name, 'Dropout', bottom_name, top_name)
+    create_layer_head(fid, layer_name, 'Dropout', [bottom_name], [top_name])
     fid.write("  dropout_param {\n")
     fid.write("    dropout_ratio: %f\n" % (dropout_ratio))
     fid.write("  }\n")
     fid.write("}\n")
 
 def set_batchnorm(fid, layer_name, bottom_name, top_name):
-    create_layer_head(fid, layer_name, 'BatchNorm', bottom_name, top_name)
+    create_layer_head(fid, layer_name, 'BatchNorm', [bottom_name], [top_name])
     for _ in range(3):
         set_param(fid, ['lr_mult: 0', 'decay_mult: 0'])
     fid.write("}\n")
 
 def set_scale(fid, layer_name, bottom_name, top_name, params, bias_term, filler, bias_filler):
-    create_layer_head(fid, layer_name, 'Scale', bottom_name, top_name)
+    create_layer_head(fid, layer_name, 'Scale', [bottom_name], [top_name])
     for param in params:
         set_param(fid, param)
     if bias_term is not None or filler is not None or bias_filler is not None:
@@ -93,4 +95,12 @@ def set_scale(fid, layer_name, bottom_name, top_name, params, bias_term, filler,
         set_filler(fid, 'bias_filler', bias_filler)
         fid.write("  }\n")
     fid.write("}\n")
+
+def set_eltwise(fid, layer_name, bottom_name, top_name, operation):
+    create_layer_head(fid, layer_name, 'Eltwise', bottom_name, [top_name])
+    fid.write("  eltwise_param {\n")
+    fid.write("    operation: %s\n" % (operation))
+    fid.write("  }\n")
+    fid.write("}\n")
+
 

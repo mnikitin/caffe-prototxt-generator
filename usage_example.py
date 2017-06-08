@@ -14,6 +14,7 @@ def main(argc, argv):
         set_innerproduct(f, 'ip1', 'pool1', 'ip1', [], 100500, None, ['gaussian', 'std: 0.01'], ['constant', 'value: 0.0'])
         set_batchnorm(f, 'bn', 'ip1', 'ip1')
         set_scale(f, 'scale', 'ip1', 'ip1', [], 'true', None, ['constant', 'value: 0'])
+        set_eltwise(f, 'eltwise_sum', ['ip1', 'ip1'], 'ip1_sum', 'SUM')
 
 if __name__ == "__main__":
     main(len(sys.argv), sys.argv)
