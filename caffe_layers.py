@@ -22,7 +22,9 @@ def create_layer_head(fid, layer_name, layer_type, bottom_name, top_name):
 def set_filler(fid, filler_name, filler):
     if filler:
         fid.write("    %s {\n" % (filler_name))
-        if type(filler) is str:
+        if type(filler) is float:
+            fid.write("      value: \"%f\"\n" % (filler))
+        elif type(filler) is str:
             fid.write("      type: \"%s\"\n" % (filler))
         elif type(filler) is list:
             fid.write("      type: \"%s\"\n" % (filler[0]))
