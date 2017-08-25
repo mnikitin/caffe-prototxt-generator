@@ -145,6 +145,14 @@ def set_eltwise(fid, layer_name, bottom_name, top_name, operation):
     fid.write("  }\n")
     fid.write("}\n")
 
+def set_concat(fid, layer_name, bottom_name, top_name, axis = None):
+    create_layer_head(fid, layer_name, 'Concat', bottom_name, top_name)
+    if axis is not None:
+        fid.write("  concat_param {\n")
+        fid.write("    axis: %d\n" % (axis))
+        fid.write("  }\n")
+    fid.write("}\n")
+
 def set_loss_softmax(fid, layer_name, bottom_name, top_name, loss_weight = None):
     create_layer_head(fid, layer_name, 'SoftmaxWithLoss', bottom_name, top_name)
     if loss_weight is not None:
