@@ -104,12 +104,15 @@ def set_relu(fid, layer_name, bottom_name, top_name = None):
     create_layer_head(fid, layer_name, 'ReLU', bottom_name, top_name)
     fid.write("}\n")
 
-def set_pooling(fid, layer_name, bottom_name, top_name, pool_type, kernel_size, stride):
+def set_pooling(fid, layer_name, bottom_name, top_name, pool_type, kernel_size, stride, global_pooling = False):
     create_layer_head(fid, layer_name, 'Pooling', bottom_name, top_name)
     fid.write("  pooling_param {\n")
     fid.write("    pool: %s\n" % (pool_type))
-    fid.write("    kernel_size: %d\n" % (kernel_size))
-    fid.write("    stride: %d\n" % (stride))
+    if not global_pooling:
+        fid.write("    kernel_size: %d\n" % (kernel_size))
+        fid.write("    stride: %d\n" % (stride))
+    else:
+        fid.write("    global_pooling: true\n")
     fid.write("  }\n")
     fid.write("}\n")
 
