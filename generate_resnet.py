@@ -30,19 +30,19 @@ def set_conv_unit(fid, unit_id, bottom_name, num_res_block, num_res_conv, num_ou
         cur_bottom = cur_top
     return cur_bottom
 
-def set_resnet(fid, bottom_name, num_res_block):
-    top = set_conv_unit(fid, 1, bottom_name, num_res_block[0], 2, 64)       # Conv1.x
-    top = set_conv_unit(fid, 2, top, num_res_block[1], 2, 128)              # Conv2.x
-    top = set_conv_unit(fid, 3, top, num_res_block[2], 2, 256)              # Conv3.x
-    top = set_conv_unit(fid, 4, top, num_res_block[3], 2, 512)              # Conv4.x
-    set_innerproduct(fid, 'fc5', top, 'fc5', [], 512, None, 'msra')           # FC5
+def set_resnet(fid, bottom_name, num_res_block, num_conv_map):
+    top = set_conv_unit(fid, 1, bottom_name, num_res_block[0], 2, num_conv_map[0])       # Conv1.x
+    top = set_conv_unit(fid, 2, top, num_res_block[1], 2, num_conv_map[1])               # Conv2.x
+    top = set_conv_unit(fid, 3, top, num_res_block[2], 2, num_conv_map[2])               # Conv3.x
+    top = set_conv_unit(fid, 4, top, num_res_block[3], 2, num_conv_map[3])               # Conv4.x
+    set_innerproduct(fid, 'fc5', top, 'fc5', [], 512, None, 'msra')                      # FC5
 
 def main(argc, argv):
     
-    net_name = 'resnet20.prototxt'
+    net_name = 'resnet.prototxt'
     with open(net_name, 'w') as f:
         set_data_deploy(f, 'data', 1, 3, 112, 112)
-        set_resnet(f, 'data', [1, 2, 4, 1])
+        set_resnet(f, 'data', [1, 2, 4, 1], [64, 128, 256, 512])
 
 
 if __name__ == "__main__":
