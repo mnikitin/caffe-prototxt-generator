@@ -1,3 +1,3 @@
-# caffe-net-generator
+# caffe-prototxt-generator
 
 python scripts for generating caffe prototxt
